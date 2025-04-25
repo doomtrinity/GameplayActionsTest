@@ -46,7 +46,7 @@ This image shows the action tags that are available in this project. The action 
 ![character actions setup](Docs/Images/enemy_character_data_setup.png)
 
 These are the main steps to setup a new action:
-* add an action tag and optionally an action event tag (if an action can be triggered by an event)
+* add an action tag and optionally an action event tag (if the action can be triggered by an event)
 * create the action object
 * create the action data asset (this is where the action tag is mapped to the actual action object)
 * add the action data asset to the gameplay action component of the controlled character
