@@ -23,7 +23,7 @@ The actual action object mapped to a specific gameplay tag. This is a UObject th
 ### UGameplayActionData
 A data asset that holds all the data related to a single action. Basically, it defines the mapping of an action tag to the actual action object, but it also provides a way to configure the condition checks to start the action (e.g. for a melee attack, if the AI is close enough to the player), its parameters, and defines the action tags that can be aborted by this action. The action component is supposed to load/reference these data assets (one per action), and provide a way to map the action tag to the matching data asset. This object represents the data-driven part of the system.
 
-### behavior tree nodes
+### Behavior tree nodes
 As I mentioned earlier, this plugin is based on a relatively simple AI logic I made a long time ago, for some enemies whose logic was (for the most part) about chasing and attacking the player. That logic was based on behavior trees, but the main issue of my old system is that it required changing many things in order to add and use a new AI logic, such as a ranged attack. With this plugin I attempted to address that issue, and it should be fairly easy to add new logic (actions) and integrate it in the behavior tree, with the tree nodes the plugin provides.
 
 ## The test project
@@ -33,6 +33,7 @@ The following notes cover the main concepts of the setup of this project, which 
 
 ### Gameplay action tags
 ![action tags](Docs/Images/action_tags.png)
+
 This image shows the action tags that are available in this project. The action tag is basically a label that is mapped to the the actual action (see setup below). The event tag is supposed to be used as a trigger, which can eventually start an action. For example, the "player fire" event can be used to trigger the "dodge" projectile action on the enemies.
 ![player fire event](Docs/Images/broadcast_player_fire_event.png)
 
@@ -49,7 +50,7 @@ These are the main steps to setup a new action:
 Optionally, the action data asset can define other data such as the start conditions and the action parameters. Important! These are EditInline/Instanced UObjects that are referenced directly by the gameplay action component, and must be treated as const objects - a change at runtime to these objects will be reflected to the data asset which can then be saved accidentally! The data asset could be refactored not to use these objects this way/directly, but this should not be a problem if such objects are used correctly. The nice thing about using objects for start conditions is that they can implement logic in functions. For example, the image below shows the start condition used by melee attack in order to check if the player is close enough to the player.
 ![action start condition](Docs/Images/max_distance_start_condition.png)
 
-### behavior tree
+### Behavior tree
 ![behavior tree](Docs/Images/enemy_behaviour_tree.png)
 The setup of the behavior tree should mostly consists of adding new action/event tags to the properties of the service/decorator/task nodes.
 This is the interesting part of the behavior tree: the actions can be handled through generic nodes, if no special action handling is needed. This is how dodge, melee/strafe/ranged attacks, stagger actions are handled. Basically, the service tries to start the action, the decorator checks if the action is active and optionally aborts self and/or lower priority nodes, and the task just waits for the action to stop. One important thing to note is that the abort logic of the behavior tree tasks shouldn't be confused with actions abort logic. Usually they overlap, meaning that, for example, if an action aborts another action, a behavior tree decorator could then abort self/a lower priority node. But that's not always the case. For example, in this test project the teleport action can be aborted by death only, but will never be aborted by other actions (e.g. dodge), even if these are handled in a higher priority branch, because such actions do not have the teleport action set as an abort tag.
