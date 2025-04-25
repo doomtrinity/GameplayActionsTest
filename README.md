@@ -88,8 +88,8 @@ This a list of possible improvements I thought about while working on this plugi
 * actions priority
 
 ## Links
-* Unreal Forums link
-* YouTube link
+*  [Unreal Engine Forums](https://forums.unrealengine.com/t/gameplay-actions-plugin/2475272)
+*  [YouTube](https://youtu.be/8XdpCsaCutU?si=c14NeBZGjy77NlNu)  
 
 
 
