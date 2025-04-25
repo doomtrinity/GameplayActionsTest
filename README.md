@@ -70,7 +70,7 @@ The action object is an object that is instanced per actor (or, more precisely, 
 
 ## Caveats
 * avoided overly defensive code, just make sure to to follow the simple rules of the system; there are many ensures though, which should help to spot errors in the setup
-* multiple actions can run simultaneously, but the main logic is supposed be based on one active action at a time, at least this is how I handled the actions in this project; for example, an AI could have a strafe action, and could perform a ranged attack action while strafing (in this project, the strafe action defines its own ranged attack logic though)
+* theoretically, multiple actions could be active simultaneously, for example an AI could have a strafe action and a ranged attack action, and could perform the ranged attack while strafing; that's not possible in the current implementation though - the action component actually uses the abort tags also as "blocked by" tags (in this test project, the strafe action defines its own ranged attack logic)
 * the underlying concept of this system is heavily influenced by an old system I made for an actual game years ago, but this plugin has been put together very quickly, it has not be tested thoroughly, and is not used in production
 * actually for UE4.27 only; I attempted to refactor my old system years ago, but I eventually couldn't complete the refactor; lately, I strived to come back to it and get something done for release, so I started working on this plugin and I tried to reuse the logic I made in older Unreal Engine versions; once again, this plugin deserves more testing
 * replication is not handled on purpose, even though is something I wanted to support (fun fact, my old system supported replication...)
