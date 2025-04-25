@@ -36,6 +36,7 @@ The following notes cover the main concepts of the setup of this project, which 
 ![action tags](Docs/Images/action_tags.png)
 
 This image shows the action tags that are available in this project. The action tag is basically a label that is mapped to the the actual action (see setup below). The event tag is supposed to be used as a trigger, which can eventually start an action. For example, the "player fire" event can be used to trigger the "dodge" projectile action on the enemies.
+
 ![player fire event](Docs/Images/broadcast_player_fire_event.png)
 
 ### Setup
