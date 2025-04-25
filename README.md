@@ -1,6 +1,6 @@
-# Test project for the gameplay actions plugin - a plugin for simple gameplay AI logic, that integrates with behavior trees
+# Gameplay Actions plugin for Unreal Engine - a plugin for simple gameplay AI logic, that integrates with behavior trees
 
-The plugin source code is included in this project.
+The plugin source code is included in this test project.
 The idea is to provide a data-driven approach to add new behaviors, that is, gameplay actions, to an actor. A use case scenario could be a simple enemy AI that can chase and attack the player with melee and ranged attacks.
 This plugin is the improved version of an old system I made (see the notes below for more info on this).
 
