@@ -32,14 +32,18 @@ This test project includes a simple AI character that basically chases and attac
 The following notes cover the main concepts of the setup of this project, which should help to figure out how the plugin is supposed to be used.
 
 ### Gameplay action tags
+
 ![action tags](Docs/Images/action_tags.png)
 
 This image shows the action tags that are available in this project. The action tag is basically a label that is mapped to the the actual action (see setup below). The event tag is supposed to be used as a trigger, which can eventually start an action. For example, the "player fire" event can be used to trigger the "dodge" projectile action on the enemies.
 ![player fire event](Docs/Images/broadcast_player_fire_event.png)
 
 ### Setup
+
 ![dodge action data](Docs/Images/dodge_data_setup.png)
+
 ![character actions setup](Docs/Images/enemy_character_data_setup.png)
+
 These are the main steps to setup a new action:
 * add an action tag and optionally an action event tag (if an action can be triggered by an event)
 * create the action object
@@ -48,15 +52,19 @@ These are the main steps to setup a new action:
 * handle the new action and event tags in the behavior tree nodes (see below)
 
 Optionally, the action data asset can define other data such as the start conditions and the action parameters. Important! These are EditInline/Instanced UObjects that are referenced directly by the gameplay action component, and must be treated as const objects - a change at runtime to these objects will be reflected to the data asset which can then be saved accidentally! The data asset could be refactored not to use these objects this way/directly, but this should not be a problem if such objects are used correctly. The nice thing about using objects for start conditions is that they can implement logic in functions. For example, the image below shows the start condition used by melee attack in order to check if the player is close enough to the player.
+
 ![action start condition](Docs/Images/max_distance_start_condition.png)
 
 ### Behavior tree
+
 ![behavior tree](Docs/Images/enemy_behaviour_tree.png)
+
 The setup of the behavior tree should mostly consists of adding new action/event tags to the properties of the service/decorator/task nodes.
 This is the interesting part of the behavior tree: the actions can be handled through generic nodes, if no special action handling is needed. This is how dodge, melee/strafe/ranged attacks, stagger actions are handled. Basically, the service tries to start the action, the decorator checks if the action is active and optionally aborts self and/or lower priority nodes, and the task just waits for the action to stop. One important thing to note is that the abort logic of the behavior tree tasks shouldn't be confused with actions abort logic. Usually they overlap, meaning that, for example, if an action aborts another action, a behavior tree decorator could then abort self/a lower priority node. But that's not always the case. For example, in this test project the teleport action can be aborted by death only, but will never be aborted by other actions (e.g. dodge), even if these are handled in a higher priority branch, because such actions do not have the teleport action set as an abort tag.
 
 ### Gameplay action object
 The action object is an object that is instanced per actor (or, more precisely, per actor component). This means that every actor (i.e. pawn/character) that uses the gameplay action component, has its own instance of the object. This helps to keep the object logic simple. Since this is where the action logic resides, I think it is worth describing some parts of its inner workings. All this object has to do, is to handle the actual logic of the action, through the provided blueprint native events (init/start/stop/event/tick). The init function is called only when the action is added to the component, and is a good place to cache constant data. The stop function is supposed to clear and reset anything that has been set in the start function. The tick function is disabled by default and, by default, is called only when the action is active. Note that the action object should be considered as gameplay code, meaning that the action object isn't supposed to know anything about the gameplay action component, but should use the gameplay action interface instead, if needed. For example, the following image shows the dodge action logic, where the action stops itself by calling the the stop function on the interface.
+
 ![strafe action](Docs/Images/strafe_action.png)
 
 ## Caveats
